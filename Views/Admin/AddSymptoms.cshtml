@@ -1,0 +1,95 @@
+﻿
+@{
+    ViewBag.Title = "AddSymptoms";
+}
+
+<script type="text/javascript">
+    function AddSymptoms() {
+
+        $.post("/Admin/GetVitaminList/", function (data) {  // post function to get the Dropdown list of vitamin
+            debugger;
+            var listVita = '<option>-- Select --</option>';
+
+            $.each(data, function (I, V) {
+                debugger;
+                listVita += '<option value="' + V.VitaminId +'">' + V.Vitamin +'</option>'
+            });
+            $('#VitaminList').html(listVita);
+
+        });
+
+        $("#BtnSubmitSymptom").click(function () {      // button click to save a new symptom 
+            debugger;
+            var NewSymptom = $('#NewSymptom').val();
+            var VitaminID = $('#VitaminList').val();
+            var status = NewSymptom != "" && VitaminID != "" ? true : false;
+
+            if (status == true) {
+                var param = [{ name: 'NewSymptom', value: NewSymptom }, { name: 'VitaminID', value: VitaminID }];
+                $.post("/Admin/AddNewSymptom/", param, function (data) {            // Post function to save new symptom
+                    debugger;
+                    alert(data);
+                    setTimeout(function () { location.reload(); }, 800);
+                });
+            }
+            else {
+                alert("Please Enter the New Symptom");
+            }
+           
+        });
+    }
+</script>
+<style>
+    input[type=text], .btnsubmit {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 120px;
+    }
+    .Divstyle {
+        
+        margin: 0% auto 15% auto;
+        width: 100%;
+        background-color: #fefefe;
+        height: 80%;
+    }
+</style>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Symptoms</title>
+</head>
+<body onload="AddSymptoms();">
+    <div class="jumbotron" style="height: 600px; margin-top:-40px;">
+        <h2>Add Symptoms</h2>
+        <input type="button" value="<" onclick="history.back();" />
+        <div class="Divstyle">
+            &nbsp;
+            &nbsp;
+            <div class="row">
+                <div class="col-md-5">
+                    <label style="margin: 8px 120px; font-size: large; ">Symptom </label>
+                    <div class="form-group">
+                        <input type="text" placeholder="Enter new symptom" id="NewSymptom" autocomplete="off" required />
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <label style="margin: 15px 2px; font-size: large; ">Select Vitamin</label>
+                    <div class="form-group">
+                        <select class="form-control" id="VitaminList">                           
+                        </select>                        
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">                  
+                    <div class="form-group">
+                        <input type="button" id="BtnSubmitSymptom" class="btnsubmit" value="Submit" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

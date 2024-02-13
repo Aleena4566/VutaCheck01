@@ -1,0 +1,168 @@
+﻿
+@{
+    ViewBag.Title = "LogFoodIntake";
+
+}
+<style>
+    input[type=date], input[type=time], input[type=text], .btnsubmit {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 20px;
+    }
+
+    .Divstyle {
+        margin: 0% auto 15% auto;
+        width: 100%;
+        background-color: #fefefe;
+        height: 80%;
+    }
+</style>
+<script type="text/javascript">
+    function LogFoodIntake() {
+        debugger;
+        var UserId = decodeURIComponent(window.location.search.split('=')[1]);
+         
+        $("#SourceType").change(function () {
+            debugger;
+            var SourceType = $("#SourceType").val();
+            var param = [{ name: 'SourceType', value: SourceType }];
+
+            var IntakeType = $("#SourceType option:selected").text();
+            $.post("/Home/GetFoodList", param, function (Data) {
+                debugger;
+                if (Data != "") {
+                    var FoodList = "", Slno = 1;;
+                    var counter = 0;
+                    FoodList = '<table><tr><td colspan="3"></td></tr>'      //<input type="text" id="TxtSearch" placeholder="Search.." autocomplet="off" />
+                        + '<tr style="font-size: x-large; font-family: AUTO; text-align:center;"><th style="text-align:center;">Slno</th>'
+                        + '<th style= "text-align:center;"> ' + IntakeType + '</th><th></th></tr>'
+                    $.each(Data, function (I, V) {
+                        debugger;
+                        FoodList += '<tr style="font-size: large; font-family: AUTO; text-align:center;">'
+                            + '<td>' + Slno + '</td><td>' + V.SourceName + '</td>'
+                            + '<td><input type="checkbox" id=' + V.SourceIntakeId + ' /></td></tr> '
+                            + '</table>'
+                        Slno++;
+                    });
+                    $("#DisplaySourceList").html(FoodList);
+
+                    //$("#TxtSearch").change(function () {
+                    //    debugger;
+                    //    var searchTerm = $(this).val();
+                    //    var filteredData = Data.filter(function (item) {
+                    //        return item.SourceName.toLowerCase().includes(searchTerm.toLowerCase());
+
+                    //    });
+                    //    var filteredFoodList = "";
+                    //    filteredFoodList = '<table><tr><td colspan="3"><input type="text" id="TxtSearch" placeholder="Search.." autocomplet="off" /></td></tr>'
+                    //        + '<tr style="font-size: x-large; font-family: AUTO; text-align:center;"><th style="text-align:center;">Slno</th>'
+                    //        + '<th style= "text-align:center;"> ' + IntakeType + '</th><th></th></tr>'
+                    //    $.each(filteredData, function (I, V) {
+                    //        debugger;
+                    //        filteredFoodList += '<tr style="font-size: large; font-family: AUTO; text-align:center;"'
+                    //            + 'VitaminId = ' + V.VitaminId + ' ><td>' + Slno + '</td><td>' + V.SourceName + '</td>'
+                    //            + '<td><input type="checkbox" id=' + V.SourceIntakeId + ' /></td></tr> '
+                    //            + '</table>'
+                    //        Slno++;
+                    //    });
+                    //    $("#DisplaySourceList").html(filteredFoodList);
+                    //});
+
+                    $("#BtnLogIntake").click(function () {
+                        debugger;
+                        var IntakeDate = $("#LogDate").val();
+                        var IntakeTime = $("#LogTime").val();
+                        var SourceType = $("#SourceType").val();
+                        var AdditionalInfo = $("#AdditionalInfo").val();
+                        var SelectedSource = "";
+                        var checkboxes = document.querySelectorAll('input[type="checkbox"]'); 
+
+                        checkboxes.forEach(function (checkbox) {
+                            if (checkbox.checked == true) {
+                                SelectedSource += checkbox.id + ",";
+                            }
+                        });
+                        var ValidateStatus = IntakeDate != "" && IntakeTime != "" && SourceType != "" && SelectedSource != "" ? true : false;
+                        if (ValidateStatus == true) {
+                            var param = [{ name: 'IntakeDate', value: IntakeDate }, { name: 'IntakeTime', value: IntakeTime },
+                                { name: 'SourceType', value: SourceType }, { name: 'AdditionalInfo', value: AdditionalInfo },
+                                { name: 'SelectedSource', value: SelectedSource }, { name: 'UserId', value: UserId }];
+                            debugger;
+                            $.post("/Home/LogFoodIntakeDetails", param, function (data) {
+                                debugger;
+                                alert(data);
+                                setTimeout(function () { location.reload(); }, 800);
+                            });
+                        }
+                        else {
+                            alert("Please Enter All Data");
+                        }                       
+                    }); 
+                }
+                else {
+                    alert("No data");
+                }
+            }); 
+        });
+    }
+</script>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Log Food Intake</title>
+</head>
+<body onload="LogFoodIntake()">
+    <h2>Log Food Intake</h2>
+    <div class="row">
+        <input type="button" value="<" onclick="history.back();" />
+    </div>
+    <div class="jumbotron">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label style="margin: 8px 20px; font-size: large; ">Date</label>
+                    <input type="date" id="LogDate" autocomplete="off" required min="2020-01-01" max="2024-01-01" />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label style="margin: 8px 20px; font-size: large; ">Time </label>
+                    <input type="time" id="LogTime" autocomplete="off" required />
+                </div>
+            </div>
+
+            <div class="col-md-3" style="margin-left:40px;">
+                <label style="margin: 15px 2px; font-size: large; ">Source Type</label>
+                <div class="form-group">
+                    <select class="form-control" id="SourceType">
+                        <option>-- Select --</option>
+                        <option value="1">Food Source</option>
+                        <option value="2">Fluid Source</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="table-responsive panel panel-default col-md-12">
+                <table id="DisplaySourceList" class="table table-striped table-hover" style="font-size:small;font-family:Arial"></table>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label style="margin: 8px 20px; font-size: large; ">Additional Information </label>
+                    <textarea placeholder="Enter here other relevent information" rows="5" cols="50" id="AdditionalInfo" style="margin: 8px 20px;"></textarea>
+                </div>
+            </div>
+            <div class="col-md-3" style="margin-left:650px; margin-top:135px; font-weight:bold">
+                <div class="form-group">
+                    <input type="button" id="BtnLogIntake" class="btnsubmit" value="Submit Food Intake" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

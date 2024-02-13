@@ -1,0 +1,137 @@
+﻿
+@{
+    ViewBag.Title = "EditorDeleteSymptoms";
+}
+
+<script type="text/javascript">
+    function EditorDeleteSymptoms() {
+        debugger;
+        $.post("/Admin/GetSymptomList", function (data) {       // post function to get the list of symptoms
+            debugger;
+            if (data != "") {
+                var Table = "", Slno = 1;
+                Table += '<table><tr><th>Slno</th><th>Vitamin</th><th>Symptom</th><th></th><th></th></tr>'
+                $.each(data, function (I, V) {
+                    debugger;
+                    Table += '<tr><td>' + Slno + '</td><td>' + V.Vitamin + '</td><td>' + V.SymptomDescription + '</td>'
+                        + '<td> <input EditVitaminId="' + V.VitaminId + '" EditVitamin="' + V.Vitamin + '" SymptomDescription="' + V.SymptomDescription + '" SymptomId = "' + V.SymptomId + '" type = "button" value = "Edit" class="BTNEditSymptom" /></td>'
+                        + '<td> <input DeleSymptomId="' + V.SymptomId + '" DeleVitaminId="' + V.VitaminId + '"   type="button" value="Delete" class="BTNDeleteSymptom" /></td></tr> '
+                    Slno++
+                });
+                $("#ListSymptomstable").html(Table);
+
+                $(".BTNEditSymptom").click(function () {                               // Edit button click
+                    debugger;
+                    $('.DispalySymptomlist').slideUp();
+                    $('.EditsymptomDiv').removeClass('hide');
+
+                    var SymptomId = $(this).attr('SymptomId');
+                    var SymptomDescription = $(this).attr('SymptomDescription');
+
+                    $('#txtEditsymptom').val(SymptomDescription);
+                    $('#GetSymptomID').val(SymptomId);
+
+                    var EditVita = $(this).attr('EditVitamin');
+                    var EditVitaId = $(this).attr('EditVitaminId');
+                    var DropdownVita = $('#VitaminList').val(EditVitaId);
+
+                    $('#BTNUpdate').click(function () {                 //  Button click to save the edit                          
+                        debugger;
+                        var UpdatedSymptom = $('#txtEditsymptom').val();
+                        var updatedVitaminId = $('#VitaminList').val();
+                  
+                         var param = [{ name: 'SymptomId', value: SymptomId },{ name: 'UpdatedSymptom', value: UpdatedSymptom },{ name: 'updatedVitaminId', value: updatedVitaminId }];
+                        $.post("/Admin/UpdateSymptom", param, function (data) {         // post function to save the edit
+                            debugger;
+                            debugger;
+                            alert(data);
+                            setTimeout(function () { location.reload(); }, 800);
+
+                        });
+                    });
+                });                         //Btn Edit click end
+
+                $(".BTNDeleteSymptom").click(function () {          // click the funtion to delete the symptom 
+                    debugger;
+                    var DeleteSymptomId = $(this).attr('DeleSymptomId');
+                    var DeleVitaminId = $(this).attr('DeleVitaminId');
+                    var param = [{ name: 'DeleteSymptomId', value: DeleteSymptomId }, { name: 'DeleVitaminId', value: DeleVitaminId }];
+                    $.post("/Admin/DeleteSymptom", param, function (data) {         // post function to delete symptom
+
+                        debugger;
+                        alert(data);
+                        setTimeout(function () { location.reload(); }, 800);
+                    });
+                });               
+            }
+            else {
+                alert("No Data..")
+            }             
+        });
+
+
+        $.post("/Admin/GetVitaminList/", function (data) {   // post function to get the vitamin list 
+            debugger;
+            var listVita = '<option></option>'
+
+            $.each(data, function (I, V) {
+                debugger;
+                listVita += '<option value="' + V.VitaminId + '">' + V.Vitamin + '</option>'
+            });
+            $('#VitaminList').html(listVita);
+
+        }); 
+    }
+</script>
+
+<style>
+    .Divstyle {
+        margin: 0% auto 15% auto;
+        width: 100%;
+        background-color: #fefefe;
+        height: 80%;
+    }
+    input[type=text] {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 120px;
+    }
+</style>
+
+<!DOCTYPE html>
+<html>
+<head><title>Edit or Delete Symptoms</title></head>
+<body onload="EditorDeleteSymptoms()">
+    <div class="jumbotron">
+        <h2>Edit or Delete Symptom</h2>
+        <input type="button" value="<" onclick="history.back();" />        
+        <div class="DispalySymptomlist">
+            <table id="ListSymptomstable" class="table table-striped table-hover" style="font-size:small;font-family:Arial;">
+            </table>
+        </div>
+        <div class="EditsymptomDiv hide jumbotron" style="height: 600px; width:100%;">
+            <div class="row">
+                <div class="col-md-5">
+                    <label style="margin: 8px 120px; font-size: large; ">Symptom </label>
+                    <div class="form-group">
+                        <input type="text" id="txtEditsymptom" autocomplete="off" />
+                        @Html.Hidden("GetSymptomID")
+                    </div>
+                </div>
+                <div class="col-md-5" style="margin-left:125px;">
+                    <label style="margin: 15px 2px; font-size: large; ">Select Vitamin</label>
+                    <div>
+                        <select class="form-control" id="VitaminList">
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <input type="button" value="Update Symptom" id="BTNUpdate" style="padding: 12px 20px; margin: 8px 340px;" />
+                </div>
+            </div>
+        </div>                
+    </div> 
+</body>
+</html>

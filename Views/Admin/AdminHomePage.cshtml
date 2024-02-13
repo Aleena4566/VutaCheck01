@@ -1,0 +1,83 @@
+﻿
+@{
+    ViewBag.Title = "AdminHomePage";
+}
+
+
+<script type="text/javascript">
+
+    function AdminHomePage() {
+        debugger;
+        var dataPassed = decodeURIComponent(window.location.search.split('=')[1]);
+        console.log(dataPassed);
+        $("#DisplayUserName").text(dataPassed);
+
+        $("#BTNLogOut").click(function () {
+            debugger;
+            var urlpath = '/Home/Index'
+            window.location.href = urlpath;
+
+        });
+    }
+
+</script>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>
+        Admin Home Page
+    </title>
+</head>
+<body onload="AdminHomePage()">
+    <div class="container" style="height: 600px; background-color: #337ab71a;">
+
+        <div class="col-md-12" style="margin-left:950px;">
+            <input type="button" value="Log Out" id="BTNLogOut" style="width: 125px; height: 70px; font-size: x-large;" />
+        </div>
+        <div class="row">
+            <div class="col-md-12" style="font-size: xx-large;">
+                <span>Hello <i id="DisplayUserName"></i> </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <label style="background: #d9edf7; width: 317px; height: 217px; margin: 10px; padding: 10px; border-radius: 25px;">
+                    <label style="margin-left: 84px;scale: 2.2;margin-top: 20px;">
+                        @Html.ActionLink("Add/ Delete Interesting Facts", "AddVitaminFacts", "Admin", new { area = "" }, new { @class = "navbar-brand" })
+                    </label>
+                </label>
+            </div>
+            <div class="col-md-4">
+                <label style="background: #d9edf7; width: 300px; height: 217px; margin: 10px; padding: 10px; border-radius: 25px;">
+                    <label style="margin-left: 84px;scale: 2.2;margin-top: 20px;">
+                        @Html.ActionLink("Add Symptom", "AddSymptoms", "Admin", new { area = "" }, new { @class = "navbar-brand" })
+                    </label>
+                </label>
+            </div>
+            <div class="col-md-4">
+                <label style="background: #d9edf7; width: 300px; height: 217px; margin: 10px; padding: 10px; border-radius: 25px;">
+                    <label style="margin-left: 84px;scale: 2.2;margin-top: 20px;">
+                        @Html.ActionLink("Edit/ Delete Symptom", "EditorDeleteSymptoms", "Admin", new { area = "" }, new { @class = "navbar-brand" })
+                    </label>
+                </label>
+            </div>
+            <div class="col-md-4">
+                <label style="background: #d9edf7; width: 300px; height: 217px; margin: 10px; padding: 10px; border-radius: 25px;">
+                    <label style="margin-left: 84px;scale: 2.2;margin-top: 20px;">
+                        @Html.ActionLink("Add Vitamin Source", "AddVitaminSource", "Admin", new { area = "" }, new { @class = "navbar-brand" })
+                    </label>
+                </label>
+            </div>
+            <div class="col-md-4">
+                <label style="background: #d9edf7; width: 300px; height: 217px; margin: 10px; padding: 10px; border-radius: 25px;">
+                    <label style="margin-left: 84px;scale: 2.2;margin-top: 20px;">
+                        @Html.ActionLink("Edit/ Delete Vitamin Source", "EditorDeleteVitaminSource", "Admin", new { area = "" }, new { @class = "navbar-brand" })
+                    </label>
+                </label>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

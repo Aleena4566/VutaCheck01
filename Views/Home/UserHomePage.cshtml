@@ -1,0 +1,97 @@
+﻿
+@{
+    ViewBag.Title = "UserHomePage";    
+
+}
+<script type="text/javascript">
+
+    function UserHomePage() {
+        debugger;
+        var dataPassed = decodeURIComponent(window.location.search.split('=')[1]);
+        var UserId = decodeURIComponent(window.location.search.split('=')[2]);
+
+        console.log(dataPassed);
+        $("#DisplayUserName").text(dataPassed);
+
+        $("#UserIdHidden").val(UserId);
+        var logFoodIntakeLink = $("#logFoodIntakeLink");
+        var currentHref = logFoodIntakeLink.attr("href");
+        logFoodIntakeLink.attr("href", currentHref + "?data=" + encodeURIComponent(UserId));
+
+
+        var FoodIntakeHistoryLink = $("#FoodIntakeHistoryLink");
+        var Href = FoodIntakeHistoryLink.attr("href");
+        FoodIntakeHistoryLink.attr("href", Href + "?data=" + encodeURIComponent(UserId));
+
+
+        $("#BTNLogOut").click(function () {
+            debugger;
+            var urlpath = '/Home/Index'
+            window.location.href = urlpath;
+
+        });
+    }
+</script>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>
+    </title>
+</head>
+<body onload="UserHomePage()">
+    <div class="container" style="height: 600px; background-color: #337ab71a;">
+        <div class="col-md-12" style="margin-left:950px;">
+            <input type="button" value="Log Out" id="BTNLogOut" style="width: 125px; height: 70px; font-size: x-large;" />
+        </div>
+        <div class="row"> 
+            <div class="col-md-12" style="font-size: xx-large;">
+                <span>Hello <i id="DisplayUserName"></i> </span>
+                
+                @Html.Hidden("UserIdHidden","")
+            </div>
+        </div>
+        <div class="row"> 
+            <div class="col-md-4">
+                <label style="background: #d9edf7; width: 300px; height: 217px; margin: 10px; padding: 10px; border-radius: 25px;">
+                    <label style="margin-left: 84px;scale: 2.2;margin-top: 20px;">
+                        @Html.ActionLink("Check Vitamin Deficiency", "ChooseSymptom", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                    </label>
+                </label>
+            </div>
+            <div class="col-md-4">
+                <label style="background: #f2dede; width: 300px; height: 217px; margin: 10px; padding: 10px; border-radius: 25px;">
+                    <label style="margin-left: 84px;scale: 2.2;margin-top: 20px;">
+                        @Html.ActionLink("Calculate Body Mass Index", "CalculateBMI", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                    </label>
+                </label>
+            </div>
+            <div class="col-md-4">
+                <label style="background: #dff0d8e6; width: 313px; height: 217px; margin: 10px; padding: 10px; border-radius: 25px;">
+                    <label style="margin-left: 60px;scale: 2.2;margin-top: 20px;">
+                        @Html.ActionLink("Interesting facts ", "EducationalContent", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                    </label>
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <label style="background: #ffdb1d99; width: 313px; height: 217px; margin: 10px; padding: 10px; border-radius: 25px;">
+                    <label style="margin-left: 60px;scale: 2.2;margin-top: 20px;">
+                        @Html.ActionLink("Log Food Intake", "LogFoodIntake", "Home", new { area = "" }, new { @class = "navbar-brand", id = "logFoodIntakeLink" })
+                    </label>
+                </label>
+            </div>
+            <div class="col-md-4">
+                <label style="background: #ca3e3b66; width: 313px; height: 217px; margin: 10px; padding: 10px; border-radius: 25px;">
+                    <label style="margin-left: 70px;scale: 1.9;margin-top: 20px;">
+                        @Html.ActionLink("View Food Intake History", "FoodIntakeHistory", "Home", new { area = "" }, new { @class = "navbar-brand", id= "FoodIntakeHistoryLink" })
+                    </label>
+                </label>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+

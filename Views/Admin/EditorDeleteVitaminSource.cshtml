@@ -1,0 +1,255 @@
+﻿
+@{
+    ViewBag.Title = "EditorDeleteVitaminSource";
+}
+
+
+<script type="text/javascript">
+
+    function EditorDeleteVitaminSource() {
+        debugger;
+
+        $.post("/Admin/GetVitaminList/", function (data) {
+            debugger;
+            var listVita = '<option></option>';
+
+            $.each(data, function (I, V) {
+                debugger;
+                listVita += '<option value="' + V.VitaminId + '">' + V.Vitamin + '</option>'
+            });
+            $('#VitaminList').html(listVita);
+
+        });
+
+        $('#BtnFindSource').click(function () {
+            debugger;
+            var VitSourceType = $('#VtSourceType').val();
+            var VitaminId = $('#VitaminList').val();
+            var Status = VitSourceType != "" && VitaminId != "" ? true : false;
+            var VitaName = $(".VitaName option:selected").text();
+            var SourceType = $("#VtSourceType option:selected").text();
+            if (Status == true) {
+
+                $.post("/Admin/GetVitaminSourceList", [{ name: 'VitSourceType', value: VitSourceType }, { name: 'VitaminId', value: VitaminId }], function (data) {
+                    debugger;
+                    if (data != "") {
+
+                        var Table = "", Slno = 1;
+
+                        Table += '<table><tr style="font-size:large; font-family: AUTO;"><th style="text-align:center;" colspan="4">' + SourceType + ' - ' + VitaName + '</th></tr>'
+                        Table += '<tr><th>Slno</th><th>Vitamin Source</th><th></th><th></th></tr>'
+                        $.each(data, function (I, V) {
+                            Table += '<tr><td>' + Slno + '</td><td>' + V.VitaminSource + '</td>'
+                                + '<td><input VItaSourceTypeId="' + VitSourceType + '" VitSourceId ="' + V.VitSourceId + '" VitaminSource="' + V.VitaminSource + '" SourceType="' + SourceType + '" VitaminId="' + V.VitaminId + '"  type="button" value="Edit" class="BTNEditVitaSource" /></td>'
+                                + '<td><input DeleteVItaSourceTypeId="' + VitSourceType + '" DeleteVitSourceId ="' + V.VitSourceId + '" type="button" value="Delete" class="DeleteBTNVitaSource" /> </td></tr > '
+                                + '</table>'
+                            Slno++;
+                        });
+                        $("#ListVitaminSourceTable").html(Table);
+                        $('#DIVForSelection').slideUp();
+                        $('#DIVForDisplayTable').removeClass('hide');
+
+                        // Edit Vitamin Source
+
+                        $('.BTNEditVitaSource').click(function () {
+                            debugger;
+                          
+                            var VitSourceId = $(this).attr('VitSourceId');
+                            var VitaminSource = $(this).attr('VitaminSource');
+                            var SourceType = $(this).attr('SourceType');
+                            var VitaminId = $(this).attr('VitaminId');
+                            var VItaSourceTypeId = $(this).attr('VItaSourceTypeId');                         
+                            
+                            $('#EditedFoodSource').val(VitaminSource);
+                            $('#EditVitaminList').val(VitaminId);
+                            $('#DisplaySourceType').text(SourceType);
+
+                            $('#BtnUpdateVitaSource').click(function () {                                                // Button Click for save Edit Vitamin source
+                                debugger;
+                                var EDVitaminId = $("#EditVitaminList").val();   // Edited vitamin Id
+                                var EditedFoodSource = $("#EditedFoodSource").val();    // Edited vitamin source
+
+                                var checkStaus = VitSourceId != "" && EDVitaminId != "" && EditedFoodSource != "" ? true : false;
+
+                                if (checkStaus == true) {
+                                    var param = [{ name: 'VItaSourceTypeId', value: VItaSourceTypeId }, { name: 'VitSourceId', value: VitSourceId }, { name: 'EDVitaminId', value: EDVitaminId }, { name: 'EditedFoodSource', value: EditedFoodSource }];
+                                    $.post("/Admin/EditVItaminSource", param, function (data) {
+                                        debugger;
+                                        alert(data);
+                                        setTimeout(function () { location.reload(); }, 800);
+                                    });
+                                }
+                                else {
+                                    alert('Please enter all data...')
+                                } 
+                            });
+                             
+
+                            $('#DIVEditVitaminSource').removeClass('hide');
+                            $('#DIVForDisplayTable').addClass('hide');
+                        });                 // Edit Vitamin Source End
+
+                        // Delete Vitamin Source
+                        $(".DeleteBTNVitaSource").click(function () {
+                            debugger;
+                            var DeleteVItaSourceTypeId = $(this).attr('DeleteVItaSourceTypeId');
+                            var DeleteVitSourceId = $(this).attr('DeleteVitSourceId');
+
+                            var Status = DeleteVItaSourceTypeId != "" && DeleteVitSourceId != "" ? true : false;
+                            if (Status == true) {
+                              
+                                var param = [{ name: 'DeleteVItaSourceTypeId', value: DeleteVItaSourceTypeId }, { name: 'DeleteVitSourceId', value: DeleteVitSourceId }];
+                                $.post("/Admin/DeleteFoodSource", param, function (data) {
+                                    debugger;
+                                    alert(data);
+                                    setTimeout(function () { location.reload(); }, 800);
+
+                                });
+                            }
+                            else {
+
+                            }
+                           
+
+
+
+
+                        });
+
+
+                    }
+                    else {
+                        alert("No Data..")
+                    }
+                });
+            }
+            else {
+                alert("Please select the credential...  ");
+            }
+
+
+        });
+
+        $("#BTNBacktoSelection").click(function () {
+            debugger;
+            $('#DIVForSelection').slideDown();
+            $('#DIVForDisplayTable').addClass('hide');
+        });
+        $("#BTNBacktoVitaSourceList").click(function () {
+            debugger;
+            $('#DIVForDisplayTable').removeClass('hide');
+            $('#DIVEditVitaminSource').addClass('hide');
+
+        });
+        $.post("/Admin/GetVitaminList/", function (data) {
+            debugger;
+            var listVita = '<option></option>';
+
+            $.each(data, function (I, V) {
+                debugger;
+                listVita += '<option value="' + V.VitaminId + '">' + V.Vitamin + '</option>'
+            });
+            $('#EditVitaminList').html(listVita);
+
+        });
+    }
+</script>
+
+<style>
+    .Divstyle {
+        margin: 0% auto 15% auto;
+        width: 100%;
+        background-color: #fefefe;
+        height: 80%;
+    }
+
+    input[type=text], .btnsubmit {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 120px;
+    }
+</style>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Or Delete Vitamin Source</title>
+</head>
+<body onload="EditorDeleteVitaminSource()">
+
+    <div id="DIVForSelection" class="jumbotron" style="height: 600px; margin-top:-40px;">
+        <h2>Edit/ Delete Vitamin Source</h2>
+        <input type="button" value="<" onclick="history.back();" />
+        <div class="Divstyle"> 
+            <div class="row">
+                <div class="col-md-3" style="margin-left:40px;">
+                    <label style="margin: 15px 2px; font-size: large; ">Source Type</label>
+                    <div class="form-group">
+                        <select class="form-control" id="VtSourceType">
+                            <option></option>
+                            <option value="1">Food Source</option>
+                            <option value="2">Fluid Source</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label style="margin: 15px 2px; font-size: large; ">Vitamin</label>
+                    <div class="form-group">
+                        <select class="form-control VitaName" id="VitaminList">
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-2" style="margin-left: 560px;">
+                    <div class="form-group">
+                        <input type="button" id="BtnFindSource" class="btnsubmit" value="Find" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="DIVForDisplayTable" class="jumbotron hide">
+        <h2>Edit/ Delete Vitamin Source</h2>
+        <input type="button" value="<" id="BTNBacktoSelection" />
+        <div class="row">
+            <div class="DispalyVitaminSourcelist">
+                <table id="ListVitaminSourceTable" class="table table-striped table-hover" style="font-size:small;font-family:Arial;">
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="jumbotron hide" id="DIVEditVitaminSource" style="height: 600px; margin-top:-40px;">
+        <h2>Edit Vitamin Source</h2>
+        <input type="button" value="<" id="BTNBacktoVitaSourceList" />
+        <div class="Divstyle"> 
+            <div class="row" style="margin-left:20px;">
+                &nbsp;
+                &nbsp;
+                <p id="DisplaySourceType"></p>
+                <div class="col-md-3">
+                    <label style="margin: 15px 2px; font-size: large; ">Vitamin</label>
+                    <div class="form-group">
+                        <select class="form-control" id="EditVitaminList">
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label style="margin: 10px 104px; font-size: large; ">Edit Source</label>
+                    <div class="form-group">
+                        <input type="text" id="EditedFoodSource" />
+                    </div>
+                </div>
+                <div class="col-md-2" style="margin-left: 560px;">
+                    <div class="form-group">
+                        <input type="button" id="BtnUpdateVitaSource" class="btnsubmit" value="Update" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

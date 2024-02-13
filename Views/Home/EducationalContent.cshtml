@@ -1,0 +1,56 @@
+﻿
+@{
+    ViewBag.Title = "EducationalContent";
+}
+
+<script>
+    function EducationalContent() {
+
+        $.post("/Home/GetEducationalContent", function (data) {                 //Post function to get Intersting facts
+            debugger;
+            var Table = "";
+            if (data != "")
+            {
+                $.each(data,function (I, V) {
+                    Table += '<table>' 
+                        + '<div class="row">'
+                        + '<div class="col-md-12">'
+                        + '<ul>'
+                        + '<li> ' + V.VitaminFact +' </li>'
+                        + '</ul>'
+                        + '</div>'
+                        + '</div>'
+                        + '</table>'
+                });
+                $("#DisplayEducationalcontent").html(Table);               
+            }
+        });
+    }
+</script>
+
+<style>
+    .DivEduContent {
+        margin: 1% auto 15% auto;
+        width: 100%;
+        background-color: #fefefe;
+        height: 80%;
+    }
+</style>
+<!DOCTYPE html>
+<html>
+<head>
+    <title> </title>
+</head> 
+<body onload="EducationalContent();">
+    <div class="jumbotron" style="height: 600px;">
+        <h2>Interesting Facts</h2>
+        <input type="button" value="<" onclick="history.back();" />
+        <div class="DivEduContent">
+            &nbsp;
+            &nbsp;
+            <div id="DisplayEducationalcontent">
+            </div>
+        </div>
+    </div>
+</body>
+</html>

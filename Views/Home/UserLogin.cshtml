@@ -1,0 +1,99 @@
+﻿
+@{
+    ViewBag.Title = "UserLogin";
+}
+
+<script type="text/javascript">
+    function LoginUser() {
+        debugger;
+        $('#BtnLogin').click(function () {
+            debugger;
+            var UserName = $("#UserName").val();
+            var Password = $("#Password").val();
+
+            var Status = UserName != "" && Password != "" ? true : false;
+            if (Status == true) {
+                var param = [{ name: "UserName", value: UserName }, { name: "Password", value: Password }];
+
+                $.post("/Home/CheckUserDetails", param, function (data) {
+                    debugger;
+                    if (data.UserStatus == true) {
+                        var dataToPass = data.UserDetails.Name;
+                        var UserId = data.UserDetails.UserId;
+
+                        console.log(dataToPass);
+                        var urlpath = '/Home/UserHomePage?data=' + encodeURIComponent(dataToPass) + '='+ encodeURIComponent(UserId);
+                        window.location.href = urlpath;
+                    }
+                    else if (data.UserStatus == false) {
+                        var dataToPass = data.UserDetails.Name;
+                        var urlpath = '/Admin/AdminHomePage?data=' + encodeURIComponent(dataToPass);
+                        window.location.href = urlpath;
+
+                    }
+                    else {
+                        alert(data);
+                        location.reload();
+                    }
+
+                });
+
+            } else {
+                alert("Enter Your Username and Password");
+            }
+        });
+    }
+</script>
+
+<style>
+    input[type=text], input[type=password], input[type=button] {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 120px;
+        border: 1px solid #ccc;
+    }
+
+    .DivLogin {
+        margin: 10% auto 15% auto;
+        width: 50%;
+        background-color: #fefefe;
+        height: 60%;
+    }
+</style>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Log In</title>
+</head>
+
+
+<body onload="LoginUser()">
+
+    <div class="jumbotron" style="height: 600px;">
+
+        <div class="DivLogin">
+            <label style="font-size: xx-large; font-family: ui-rounded; margin-left: 190px; margin-top:20px;">
+                Log In
+            </label>
+            <div>
+                <input type="text" placeholder="Enter Username" id="UserName" required />
+            </div>
+            <div>
+                <input type="password" placeholder="Enter Password" id="Password" required />
+            </div>
+            <div>
+                <input type="button" value="Log In" id="BtnLogin" />
+                <span style="color:Red;">@ViewBag.Message</span>
+            </div>
+
+            <div class="col-md-12">
+                <label style="margin-left:170px; font-family: ui-rounded; ">
+                    @Html.ActionLink("Join VitaCheck", "UserRegistration", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                </label>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,150 @@
+﻿
+@{
+    ViewBag.Title = "CalculateBMI";
+}
+
+
+<script type="text/javascript">
+    function calculatrBMI() {
+
+        $('#BtnBMICalculate').click(function () {           // Button click of calculatr BMI
+            debugger;
+            var height = $("#height").val();
+            var weight = $("#weight").val();
+
+
+            var status = height != "" && weight != "" ? "true" : "false";
+            if (status == "true") {
+                debugger;
+                var squareofHeight = Math.pow(height, 2).toFixed(2);
+                var Bmiweight = (weight / squareofHeight).toFixed(1)
+
+                //var IdealLowweight = (18.5 * squareofHeight).toFixed(1);
+                //var IdealHeightweight = (24.9 * squareofHeight).toFixed(1);
+               // var Idealweight = ((Bmiweight / 2.2046) * squareofHeight).toFixed(1);
+                var Idealweight = (Bmiweight * squareofHeight).toFixed(1);
+
+                var weightStatus = Bmiweight < 18.5 ? "underweight" : Bmiweight > 18.5 && Bmiweight < 24.9 ?
+                    "Normal weight" : Bmiweight > 25 && Bmiweight < 29.9 ? "overweight" : Bmiweight >= 30 ? "obese" : "Error";
+
+                var table = '<table>'
+                    + '<div class="row">'
+                    + '<div class="col-md-12">'
+                    + '<p>' + Bmiweight + '</p>'
+                    + '<p>The results indicate that you are <strong>' + weightStatus + ' </strong> </p>'
+                    // + '<p> The recommended weight range for your height is : ' + IdealLowweight + ' - ' + IdealHeightweight + '</p>'
+               //     + '<p> The recommended weight range for your height is : ' + Idealweight + '</p>'
+                    + '</div>'
+                    + '</div>'
+                    + '</table>'
+                $('#DisplayBMI').html(table);
+                //alert(Bmiweight);
+                $("#DivCalulateBMI").slideUp();
+                $("#DIVResultDisplay").removeClass("hide");
+            }
+            else {
+                alert("Please Enter Your Height and Weight ");
+            }
+        });
+
+        $("#BacktoCalculation").click(function () {
+            $("#DivCalulateBMI").slideDown();
+            $("#DIVResultDisplay").addClass("hide");
+        });
+
+        //$("#BTNReset").click(function () {
+        //    debugger;
+        //    location.reload();
+        //});
+    }
+</script>
+
+<style>
+    .BMIDiv {
+        margin: 0% auto 150% auto;
+        width: 100%;
+        background-color: #fefefe;
+        height: 70%;
+    }
+
+    input[type=number], .btnsubmit {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 120px;
+    }
+</style>
+
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>
+        BMI Calculator
+    </title>
+</head>
+<body onload="calculatrBMI()">
+    <div class="jumbotron" style="height: 600px;">
+        <h2>BMI Calculator</h2>
+        &nbsp;
+        &nbsp;
+        &nbsp;
+       
+        <div id="DivCalulateBMI" class="BMIDiv">
+            <div>
+                <input type="button" value="<" onclick="history.back();" />
+            </div>
+            &nbsp;
+            <div style="margin-left:160px;">
+                &nbsp;
+                &nbsp;
+
+                <div class="row">
+                    <div class="col-md-5">
+                        <label style="margin: 8px 120px; font-size: large; ">Height </label>
+                        <div class="form-group">
+                            <input type="number" placeholder="Enter your height in m" class="form-control" id="height" required />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-5">
+                        <label style="margin: 8px 120px; font-size: large; ">Weight </label>
+                        <div class="form-group">
+                            <input type="number" placeholder="Enter your weight in kg" class="form-control" id="weight" required />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-5">
+                        <label style="margin: 8px 120px; font-size: large; ">
+                            <input type="button" class="btnsubmit" value="Calculate BMI" id="BtnBMICalculate" />
+                        </label>
+                    </div>
+
+                    @*<div class="col-md-12">
+                    <input type="button" value="Reset" id="BTNReset" style="margin-left:50px;" />
+                </div>*@
+
+                </div>
+            </div>
+        </div>
+
+        <div id="DIVResultDisplay" class="hide BMIDiv">
+            &nbsp;
+            &nbsp;
+            <div id="DisplayBMI" style="margin-left: 80px;">
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <i></i>
+                    <input type="button" value="Back to BMI Calculation" id="BacktoCalculation" style="margin-left:690px;" class="btnsubmit" />
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+

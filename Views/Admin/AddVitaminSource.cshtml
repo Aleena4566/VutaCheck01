@@ -1,0 +1,105 @@
+﻿
+@{
+    ViewBag.Title = "AddVitaminSource";
+}
+<script type="text/javascript">
+    function AddVitaminSource() {
+       
+        $.post("/Admin/GetVitaminList/", function (data) {              //post function returns the vitamin list
+            debugger;
+            var listVita = '<option></option>';
+
+            $.each(data, function (I, V) {
+                debugger;
+                listVita += '<option value="' + V.VitaminId + '">' + V.Vitamin + '</option>'
+            });
+            $('#VitaminList').html(listVita);
+
+        });
+
+        $('#BtnSubmitSource').click(function () {           // button click to submit 
+            debugger;
+            var NewVitaSource = $('#NewSource').val();
+            var VitSourceType = $('#VtSourceType').val();
+            var VitaminId = $('#VitaminList').val();
+
+            var Status = NewSource != "" && VtSourceType != "" && VitaminId != "" ? true : false;
+            if (Status == true) {
+                var param = [{ name: 'VitSourceType', value: VitSourceType }, { name: 'NewVitaSource', value: NewVitaSource }, { name: 'VitaminId', value: VitaminId }];
+                $.post("/Admin/AddNewVitaminSourcseDet", param, function (data) {           // post function that save ne vitamin source 
+                    debugger;
+                    alert(data);
+                    setTimeout(function () { location.reload(); }, 800);
+                });
+
+            }
+            else {
+                alert("Please enter the credentials");
+            }
+        });
+    }
+</script>
+
+<style>
+    input[type=text], .btnsubmit {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 20px;
+    }
+
+    .Divstyle {
+        margin: 1% auto 15% auto;
+        width: 100%;
+        background-color: #fefefe;
+        height: 80%;
+    }
+</style>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Vitamin Source</title>
+</head>
+<body onload="AddVitaminSource()">
+    <div class="jumbotron" style="height: 600px; margin-top:-40px;">
+        <h2>Add Vitamin Source</h2>
+        <input type="button" value="<" onclick="history.back();" />
+        <div class="Divstyle">
+            <div class="row">
+                <div class="col-md-3" style="margin-left:40px;">
+                    <label style="margin: 15px 2px; font-size: large; ">Source Type</label>
+                    <div class="form-group">
+                        <select class="form-control" id="VtSourceType">
+                            <option></option>
+                            <option value="1">Food Source</option>
+                            <option value="2">Fluid Source</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <label style="margin: 15px 2px; font-size: large; ">Vitamin</label>
+                    <div class="form-group">
+                        <select class="form-control" id="VitaminList">
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label style="margin: 8px 20px; font-size: large; ">Source </label>
+                    <div class="form-group">
+                        <input type="text" placeholder="Enter vitamin source" id="NewSource" autocomplete="off" required />
+                    </div>
+                </div>
+            </div>
+           
+            <div class="row">
+                <div class="col-md-3" style="margin-left:650px; margin-top:135px;">
+                    <div class="form-group">
+                        <input type="button" id="BtnSubmitSource" class="btnsubmit" value="Add" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

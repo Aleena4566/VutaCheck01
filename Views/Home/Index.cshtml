@@ -1,0 +1,61 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>
+    </title>
+</head>
+
+<body> 
+    <div class="jumbotron" style="height: 655px;">
+        <h3>Discover Your Nutritional Health.</h3>
+
+        <div style="margin-top:20px;">
+            <div class="col-lg-6">
+                <ul>
+                    <li>
+                        <b>Identify Vitamin Deficiencies: </b> Discover your body's unique needs by selecting the symptoms you're experiencing.
+                        This application will analyze the symptoms and pinpoint potential vitamin deficiencies that may be affecting your health.
+                    </li>
+                    &nbsp;
+                    <li>
+                        <b>Food Recommendations:</b> Receive tailor-made food suggestions rich in the identified vitamins.
+                    </li>
+                    &nbsp;
+                    <li>
+                        <b>BMI Calculator: </b> Wondering about your body's health status? Calculate your Body Mass Index (BMI) with a few simple taps.
+                        Understand where you stand and take control of your overall well-being.
+                    </li>
+                    &nbsp;
+                    <li>
+                        <b>Interesting facts (Educational Content):</b> Empower yourself with knowledge! Explore articles and tips on the importance of vitamins,
+                        how they impact your health, and the role of nutrition in living a vibrant life.
+                    </li>
+                    &nbsp;
+                    <li>
+                        <b>Log Food Intake:</b> Easily record what you eat and drink with just a few taps. Monitor your vitamin 
+                        intake and meal times. Understand your dietary habits for a healthier you!
+                    </li>
+                    &nbsp;
+                    <li>
+                        <b>Check Food Intake History:</b> Explore your past meals and fluid intake. Discover patterns in your diet, 
+                        monitor progress, and make informed choices. Your journey to better health starts here!
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+        <div style="margin-left:700px;">
+            <div class="">
+                @Html.ActionLink("Get Started", "UserLogin", "Home", new { area = "" }, new { @class = "navbar-brand", @style = "font-size: xx-large;" })
+            </div>
+        </div>
+       
+    </div>
+</body>
+</html>
+
+

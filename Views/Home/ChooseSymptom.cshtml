@@ -1,0 +1,207 @@
+﻿
+ 
+<style>
+    .button-15 {
+        width: 100%;
+        padding: 8px 20px;
+        border-color: #1482D0;
+        background-image: linear-gradient(#3D94D9, #0067B9);
+        color: #FFFFFF;
+    }
+</style>
+
+<script type="text/javascript">
+    function displaySymptomResult() {
+        debugger;
+        var checkBoxStatus = "";
+        $.post('/Home/GetSymptomList', function (data) {
+            debugger;
+            var symptomlist = "";
+            var counter = 0;
+            $.each(data, function (I, V) {
+
+                if (counter % 4 === 0) {
+                    symptomlist += '<div class="row">';
+                }
+                symptomlist += '<table>'
+                    + '<div class="col-md-3">'
+                    + '<label style="background: #0000ff1a; width: 200px; height: 200px; margin: 10px; padding: 10px; border-radius: 25px;">'
+                    + '<label style="margin-left: 145px;scale: 2.2;margin-top: 20px;">'
+                    + '<input type="checkbox" id=' + V.SymptomId + ' />'
+                    + '</label>'
+                    + '<p>' + V.SymptomDescription + '</p>'
+                    + '</label>'
+                    + '</div>'
+                    + '</table>'
+                counter++;
+
+                if (counter % 4 === 0) {
+                    symptomlist += '</div>';
+                }
+            });
+
+            if (counter % 4 !== 0) {
+                symptomlist += '</div>';
+            }
+
+            $("#DisplaySymptomList").html(symptomlist);
+
+        }); //GetSymptomList post end
+
+        $("#BtnFindVita").click(function () {
+            debugger;
+            var SelectedSymptomId = "";
+            var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(function (checkbox) {
+                if (checkbox.checked == true) {
+                    SelectedSymptomId += checkbox.id + ",";
+                }
+            });
+            if (SelectedSymptomId != "") {
+
+                var param = [{ name: "SelectedSymptomId", value: SelectedSymptomId }];
+
+                $.post('/Home/GetDeficentVitaminDetail', param, function (data) {
+                    debugger;
+                    var Result = "";
+
+                    $.each(data, function (I, V) {
+
+                        Result += '<table>'
+                            + '<div class="row">'
+                            + '<div class="col-md-12">'
+                            + '<label style="background: #0000ff1a; width: 900px; height: 200px; margin: 10px; padding: 10px; border-radius: 25px;">'
+                            + '<label style="margin-top: 20px; font-size: large;">'
+                            + '<p>' + V.SymptomDescription + " - " + V.Vitamin + '</p>'
+                            + '</label>'
+                            + '<label style="margin-top: 5px; font-size: medium; font-weight: normal;">'
+                            + '<p>' + V.VitaminDescription + '</p>'
+                            + '</label>'
+                            + '<label style="margin-left: 600px;">'
+                            + '<input type="button" SeletedVitamin="' + V.Vitamin + '"  VitaminId="' + V.VitaminId + '" value="Check nourishing food" class="BtnFindFood button-15" />'
+                            + '</label>'
+                            + '</label>'
+                            + '</div>'
+                            + '</div>'
+                            + '</table>'
+                    });
+
+                    $("#ResultDiv").html(Result);
+                    $("#selectSymptomDiv").slideUp();
+                    $("#VitDepletion").removeClass("hide");
+
+                    $('.BtnFindFood', $("#ResultDiv")).click(function (event) {
+                        debugger;
+                        var VitaminId = $(this).attr('VitaminId');
+                        var SeletedVitamin = $(this).attr('SeletedVitamin');
+
+                        $.post('/Home/GetNutritiousfood', [{ name: "VitaminId", value: VitaminId }], function (data) {
+                            debugger;
+                            var Table = "", Slno = 1;
+                            var FluidTable = "", FSlno = 1; 
+
+                            Table += '<table><tr style="font-size: xx-large; font-family: AUTO; text-align:center;" ><td colspan="2" >' + SeletedVitamin + ' Food Source</td></tr>'
+                                + '<tr style="font-size:large; font-family: AUTO;" ><th>Slno</th><th>Food Source</th></tr>'
+                            $.each(data.FoodResult, function (I, V) {
+                                debugger;
+                                Table += '<tr style="font-family: AUTO; font-size:medium;" ><td>' + Slno + '</td><td>' + V.FoodSource + '</td></tr>'
+                                    + '</table>'
+                                Slno++;
+                            });
+
+                            $("#TBLNutritiousfood").html(Table);
+
+                          
+                            FluidTable += '<table><tr style="font-size: xx-large; font-family: AUTO; text-align:center;" ><td colspan="2" >' + SeletedVitamin + ' Fluid Source</td></tr>'
+                                + '<tr style="font-size:large; font-family: AUTO;" ><th>Slno</th><th>Fluid Source</th></tr>'
+                            $.each(data.FluidResult, function (I, V) {
+
+                                FluidTable += '<tr style="font-family: AUTO; font-size:medium;" ><td>' + FSlno + '</td><td>' + V.FluidSource + '</td></tr>'
+                                    + '</table>'
+                                FSlno++;
+                            });
+
+                            $("#TBLNutritiousFluidSource").html(FluidTable);
+
+                            $("#VitDepletion").addClass("hide");
+                            $("#NutritiousfoodDiv").removeClass("hide");
+
+                        });
+
+                    });
+
+                });     //  end GetDeficentVitaminDetail
+            }
+            else {
+                var DisplayData = "Choose a Health Concern";
+                alert(DisplayData);
+
+            }
+        });
+
+        // Btn click back to select symptom
+        $("#BTNBackToSymptomSelction").click(function () {
+            debugger;
+            $('#selectSymptomDiv').slideDown();
+            location.reload();
+        });
+        // Btn click back to  Vitamin Depletion
+        $("#VitaminDepletionBackBTN").click(function () {
+            debugger;
+            $('#VitDepletion').removeClass("hide");
+            $('#NutritiousfoodDiv').addClass("hide");
+        });
+
+    }
+
+</script>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body onload="displaySymptomResult()">
+    <div id="selectSymptomDiv">
+        <h2>Select a Distinctive Symptom</h2>
+        <div>
+            <input type="button" value="<" onclick="history.back();" />
+        </div>
+        <div class="jumbotron">
+            <div id="DisplaySymptomList">
+            </div>
+            <div class="col-md-4" style="margin-left: 794px;">
+                <div class="form-group">
+                    <input type="button" value="Spot nutrient defect" id="BtnFindVita" class="button-15" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="VitDepletion" class="hide">
+        <h2>Vitamin Depletion</h2>
+        <div>
+            <input type="button" value="<" id="BTNBackToSymptomSelction" />
+        </div>
+        <div style="height: 600px;">
+            <div id="ResultDiv">
+            </div>
+        </div>
+    </div>
+    <div id="NutritiousfoodDiv" class="hide">
+        <h2>Healthful Eating Advice </h2>
+        <div>
+            <input type="button" value="<" id="VitaminDepletionBackBTN" />
+        </div>
+        <div style="height: 600px;">
+            <div class="table-responsive panel panel-default col-md-12">
+                <table id="TBLNutritiousfood" class="table table-striped table-hover" style="font-size:small;font-family:Arial"></table>
+            </div>
+            <div class="table-responsive panel panel-default col-md-12">
+                <table id="TBLNutritiousFluidSource" class="table table-striped table-hover" style="font-size:small;font-family:Arial"></table>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
+

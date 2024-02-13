@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="59aee9d4b2464b4fa2def26eb615db2a" Name="Diagram1">
+        <EntityTypeShape EntityType="VitaCheck_DBModel.sysdiagram" Width="1.5" PointX="0.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="VitaCheck_DBModel.VitaminDetail" Width="2" PointX="2.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="VitaCheck_DBModel.UserDetail" Width="1.5" PointX="5.375" PointY="3.75" />
+        <EntityTypeShape EntityType="VitaCheck_DBModel.FoodDetail" Width="1.75" PointX="7.375" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="VitaCheck_DBModel.FluidVitaminDetail" Width="1.75" PointX="7.375" PointY="3.75" />
+        <AssociationConnector Association="VitaCheck_DBModel.FK_FluidVitaminDetails_VitaminDetail" />
+        <AssociationConnector Association="VitaCheck_DBModel.FK_FoodDetails_VitaminDetail" />
+        <EntityTypeShape EntityType="VitaCheck_DBModel.VitaminFactDetail" Width="2" PointX="0.75" PointY="6" />
+        <EntityTypeShape EntityType="VitaCheck_DBModel.Symptom" Width="1.5" PointX="0.75" PointY="1.75" />
+        <EntityTypeShape EntityType="VitaCheck_DBModel.VitaminSymptomRelation" Width="2.25" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="VitaCheck_DBModel.FoodIntakeDetail" Width="1.5" PointX="9.875" PointY="1.25" />
+        <AssociationConnector Association="VitaCheck_DBModel.FK_FoodIntakeDetails_FoodDetails" />
+        <AssociationConnector Association="VitaCheck_DBModel.FK_FoodIntakeDetail_UserDetail" />
+        <EntityTypeShape EntityType="VitaCheck_DBModel.FluidIntakeDetail" Width="1.5" PointX="9.875" PointY="4.875" />
+        <AssociationConnector Association="VitaCheck_DBModel.FK_FluidIntakeDetails_UserDetail" />
+        <AssociationConnector Association="VitaCheck_DBModel.FK_FluidIntakeDetails_UserDetail1" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

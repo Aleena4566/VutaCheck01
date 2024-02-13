@@ -1,0 +1,130 @@
+﻿
+@{
+    ViewBag.Title = "FoodIntakeHistory";
+}
+<style>
+    input[type=date], .btnsubmit {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 20px;
+    }
+
+    .Divstyle {
+        margin: 0% auto 15% auto;
+        width: 100%;
+        background-color: #fefefe;
+        height: 80%;
+    }
+</style>
+
+<script type="text/javascript">
+
+    function FoodIntakeHistory() {
+        debugger;
+        var UserId = decodeURIComponent(window.location.search.split('=')[1]);
+        $("#BtnCheckHistory").click(function () {
+            debugger;
+            var FromDate = $("#FromDate").val();
+            var ToDate = $("#ToDate").val();
+            var SourceType = $("#SourceType").val();
+            var SelectedSource = $("#SourceType option:selected").text();
+
+            var ValidateStatus = FromDate != "" && ToDate != "" && SourceType != "" ? true : false;
+            if (ValidateStatus == true) {
+                var param = [{ name: 'FromDate', value: FromDate }, { name: 'ToDate', value: ToDate }, { name: 'SourceType', value: SourceType }
+                    , { name: 'UserId', value: UserId }];
+
+                 
+                $.post("/Home/GetFoodIntakeHistory", param, function (data) {
+                    debugger;
+                    if (data != "") {
+
+                        var Table = "", Slno = 1;
+                        Table += '<table><tr style="font-size: xx-large; font-family: AUTO;">'
+                            + '<th colspan = "6" style = "text-align:center;" > ' + SelectedSource + '</th></tr>'
+                            + '<tr style="font-size:large; font-family: AUTO;"><th>Slno</th><th>Intake Date</th><th>Intake Time</th>'
+                            + '<th> Name</th><th>Vitamin</th> <th>Addetional Info</th></tr > '
+                        $.each(data, function (I, V) {
+                            Table += '<tr><td>' + Slno + '</td><td>' + V.Date + '</td><td>' + V.IntakeTime + '</td>'
+                                + '<td> ' + V.Source + '</td><td>' + V.Vitamin + '</td><td>' + V.AdditionalInfo + '</td></tr></table>'
+                            Slno++;
+                        });
+                        $("#TBLDispalyHistory").html(Table);
+                        $("#DivFirst").slideUp();
+                        $("#DivDisplayResult").removeClass("hide");
+
+                    }
+                    else {
+                        alert("No Data");
+                        location.reload();
+                    }
+                });
+            } else {
+                alert("Please Select All Fields");
+            }
+        });
+
+        $("#BtnBackToFirstDiv").click(function () {
+            debugger;
+            $("#DivFirst").slideDown();
+            $("#DivDisplayResult").addClass("hide");
+            location.reload();
+        });
+
+    }
+</script>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Food Intake History</title>
+</head>
+<body onload="FoodIntakeHistory()">
+    <h2>Food Intake History</h2>
+    <div id="DivFirst">
+        <div class="row">
+            <input type="button" value="<" onclick="history.back();" />
+        </div>
+        <div class="jumbotron">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label style="margin: 8px 20px; font-size: large; ">From Date</label>
+                        <input type="date" id="FromDate" autocomplete="off" required min="2020-01-01" max="2030-01-01" />
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label style="margin: 8px 20px; font-size: large; ">To Date</label>
+                        <input type="date" id="ToDate" autocomplete="off" required min="2020-01-01" max="2030-01-01" />
+                    </div>
+                </div>
+                <div class="col-md-3" style="margin-left:40px;">
+                    <label style="margin: 15px 2px; font-size: large; ">Source Type</label>
+                    <div class="form-group">
+                        <select class="form-control" id="SourceType">
+                            <option>-- Select --</option>
+                            <option value="1">Food Source</option>
+                            <option value="2">Fluid Source</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3" style="margin-left:650px; margin-top:135px; font-weight:bold">
+                    <div class="form-group">
+                        <input type="button" id="BtnCheckHistory" class="btnsubmit" value="Check History" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="DivDisplayResult" class="hide">
+        <div class="row">
+            <input type="button" value="<" id="BtnBackToFirstDiv" />
+        </div>
+        <div class="table-responsive panel panel-default col-md-12">
+            <table id="TBLDispalyHistory" class="table table-striped table-hover" style="font-size:small;font-family:Arial"></table>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,94 @@
+﻿
+@{
+    ViewBag.Title = "AddVitaminFacts";
+}
+
+<script type="text/javascript">
+
+    function AddVitaminFacts() {
+        debugger;
+        $('#BTNAddVitFact').click(function () {                 //Button click to add vitamin facts
+            debugger;
+            var NewVitaminfacts = $("#NewVitFact").val();
+
+            $.post("/Admin/AddNewVitaFacts", [{ name: 'NewVitaminfacts', value: NewVitaminfacts }], function (data) {  // post funtion to save new vitamin facts 
+                debugger;
+                alert(data);
+
+                setTimeout(function () { location.reload(); }, 800);
+
+            });
+
+        });
+
+        $.post("/Admin/GetCurrentVitaminFacts", function (data) {               // post function to get existing vitamin fact
+            debugger;
+
+            var table = "", slno = 1;
+            if (data != "") {
+                table += '<table><tr><th>Slno</th><th>Interesting Fact</th><th></th></tr>'
+
+                $.each(data, function (I, V) {
+                    debugger;
+                    table += '<tr><td>' + slno + '</td><td>' + V.VitaminFact + '</td>'
+                        +'<td> <input type="button" value="Delete" class="BtnDeleteVitFact" VitFactId=" ' + V.VitaminFactId +'" /></td> </tr>'
+                        + '</table>'
+                    slno++
+                });
+                $('#ListCurrentVitaminFact').html(table); 
+               
+                $(".BtnDeleteVitFact").click(function () {          // button click to delete a vitamin fact
+                    debugger;
+                    var VitaminFactId = $(this).attr('VitFactId');
+                    $.post("/Admin/DeleteVitFact/", [{ name: 'VitaminFactId', value: VitaminFactId }], function (data) {  // post funtion to delete vitamin fact
+                        debugger;
+                        alert(data);
+                        setTimeout(function () { location.reload(); }, 800);
+                    });
+                });
+            }
+            else {
+                alert("No Data Found");
+            }
+            
+        });
+    } 
+
+</script>
+
+<style>
+    .Divstyle {
+        width: 100%;
+        background-color: #fefefe;
+        height: 80%;
+    }
+</style>
+<!DOCTYPE html>
+<html>
+<head> <title> Add Interesting Facts </title>
+</head>
+<body onload="AddVitaminFacts()">
+    <div class="jumbotron" style="height: 600px; margin-top:-40px;">
+        <h2>Add/ Delete Interesting Facts</h2>
+        <input type="button" value="<" onclick="history.back();" />
+        <div class="Divstyle">
+            &nbsp;
+            &nbsp;
+            <div>
+                &nbsp;&nbsp;<span style="font-size:large;">Enter new Interesting facts</span>
+            </div>
+            <div>
+                &nbsp;&nbsp;<textarea rows="5" cols="50" id="NewVitFact"></textarea>
+                &nbsp;&nbsp; <input type="button" value="Add Interesting fact" id="BTNAddVitFact"  />
+            </div>
+
+            <div class="table-responsive panel panel-default col-md-12">
+                <table id="ListCurrentVitaminFact" class="table table-striped table-hover" style="font-size:small;font-family:Arial"></table>
+            </div>
+
+             
+
+        </div>
+    </div>
+</body>
+</html>

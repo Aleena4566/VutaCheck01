@@ -1,0 +1,125 @@
+﻿
+@{
+    ViewBag.Title = "UserRegistration";
+}
+
+<script type="text/javascript">
+
+    function CheckPassword() {
+        debugger;
+        var password = $("#password").val();
+        var passwordConfirm = $("#confirmpassword").val();
+        if (password != passwordConfirm) {
+            alert("Password mismatch");
+        }
+
+    }
+    function RegisterUser() {
+        debugger;
+        $("#Btnjoin").click(function () {
+            debugger;
+
+            var firstname = $("#firstname").val();
+            var lastname = $("#lastname").val();
+            var email = $("#email").val();
+            var username = $("#username").val();
+            var password = $("#password").val();
+            var confirmpassword = $("#confirmpassword").val();
+            var Status = firstname != "" && lastname != "" && email != "" && username != "" && password != "" && confirmpassword != "" ? true : false;
+            var param = [{ name: "FirstName", value: firstname }, { name: "LastName", value: lastname }, { name: "Email", value: email },
+                { name: "UserName", value: username }, { name: "Password", value: password }]
+            if (Status == true) {
+                $.post("/Home/JoinNewUser", param, function (data) {
+                    debugger;
+                    alert(data);
+                    var urlpath = '/Home/UserLogin'
+                    window.location.href = urlpath;
+                });
+            }
+            else {
+                alert("Please provide all the data");
+            }
+        });
+    }
+</script>
+
+<style>
+    input[type=text], input[type=password], input[type=email] {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 120px;
+    }
+
+    .Divcreateaccount {
+        margin: 0% auto 15% auto;
+        width: 100%;
+        background-color: #fefefe;
+        height: 80%;
+    }
+</style>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Your Account</title>
+</head>
+<body onload="RegisterUser();">
+    <div class="container" style="width:100%; height:800px;">
+        <div class="jumbotron" style="width:100%; height:800px;">
+            <div class="Divcreateaccount">
+                <label style="font-size: xx-large; font-family: ui-rounded; margin-left: 355px; margin-top:15px;">
+                    Join VitaCheck
+                </label>
+                <div class="row">
+                    <div class="col-md-5">
+                        <label style="margin: 8px 120px; font-size: large; ">First Name </label>
+                        <div class="form-group">
+                            <input type="text" required placeholder="Enter first name" id="firstname" autocomplete="off" />
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <label style="margin: 8px 120px; font-size: large; ">Last Name </label>
+                        <div class="form-group">
+                            <input type="text" placeholder="Enter last name" id="lastname" autocomplete="off" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-5">
+                        <label style="margin: 8px 120px; font-size: large;">Email</label>
+                        <div class="form-group">
+                            <input type="email" placeholder="Enter email address" id="email" autocomplete="off" />
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <label style="margin: 8px 120px; font-size: large;">User Name</label>
+                        <div class="form-group">
+                            <input type="text" placeholder="Enter user name" id="username" autocomplete="off" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-5">
+                        <label style="margin: 8px 120px; font-size: large;">Password</label>
+                        <div class="form-group">
+                            <input type="password" placeholder="Enter password" id="password" autocomplete="off" />
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <label style="margin: 8px 117px; font-size: large;">Confirm Password</label>
+                        <div class="form-group">
+                            <input type="password" placeholder="Confirm password" id="confirmpassword" autocomplete="off" onchange="CheckPassword()" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-5">
+                        <input type="button" value="Join" id="Btnjoin" style="width: 100%; padding: 12px 20px; margin: 8px 340px;" />
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
